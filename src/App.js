@@ -1,13 +1,13 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import Header from './components/Header';
+
 
 import Routes from './routes';
 
 function App() {
   return (
-    //<Provider store={store}>
       <div className="App">
+        <Header />
         <Routes />
       </div>
   );

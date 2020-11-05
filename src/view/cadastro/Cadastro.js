@@ -1,8 +1,6 @@
 
 import React, { Component } from 'react'
-
 import { connect } from 'react-redux'
-
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/container';
 import Button from '@material-ui/core/Button';
@@ -12,7 +10,6 @@ import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import { green } from '@material-ui/core/colors';
 import { Divider } from '@material-ui/core';
-
 
 /*
 Informações de paciente:
@@ -28,17 +25,6 @@ Informações de paciente:
 • Bairro – alfanumérico(100);
 • Cidade – alfanumérico(100);
 */
-
-
-const ColorButton = withStyles(theme => ({
-    root: {
-        color: '#fff',
-        backgroundColor: green[500],
-        '&:hover': {
-            backgroundColor: green[700]
-        }
-    }
-}))(Button)
 
 class Cadastro extends Component {
 
@@ -70,9 +56,10 @@ class Cadastro extends Component {
     }
 
     render () {
-        const {logradouro,numero,complemento,bairro,localidade} = this.state;
+
+        const { logradouro, numero, complemento, bairro, localidade } = this.state;
+
         return (
-            <Grid>
             <Container component="main" maxWidht="xs">
                 <Grid className="mt-md-5">
                     <Typography className="mt-3 font-weight-normal" component="h1" variant="h6">Informações Basicas</Typography>
@@ -101,6 +88,7 @@ class Cadastro extends Component {
                     <Grid item xs={12} sm={6}>
                         <TextField
                             required
+                            type="e-mail"
                             id="email"
                             name="email"
                             label="E-mail"
@@ -114,8 +102,11 @@ class Cadastro extends Component {
                             name="date"
                             label="Data de nascimento"
                             fullWidth
+                            type="date"
+                            InputLabelProps={{
+                                shrink: true,
+                              }}
                         />
-
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField
@@ -214,8 +205,19 @@ class Cadastro extends Component {
                                     value={localidade}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Button
+                            <Grid style={{textAlign:"right"}} item xs={12}>
+                                <Button style={{marginLeft: "10px", width: "123px"}}
+                                    type="button"
+                                    variant="contained"
+                                    fullWidht
+                                    color="secundary"
+                                    size="large"
+                                    className="mt-md-3"
+                                >
+                                    Cancelar
+                                </Button>
+                             
+                                <Button style={{marginLeft: "10px", width: "123px"}}
                                     type="button"
                                     variant="contained"
                                     fullWidht
@@ -226,27 +228,12 @@ class Cadastro extends Component {
                                     Salvar
                                 </Button>
                             </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <ColorButton
-                                    type="button"
-                                    variant="contained"
-                                    fullWidht
-                                    color="primary"
-                                    size="large"
-                                    className="mt-md-3"
-                                >
-                                    Cancelar
-                                </ColorButton>
-                            </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
             </Container>
-        </Grid>
-
         )
     }
-
 }
 
 export default Cadastro;
