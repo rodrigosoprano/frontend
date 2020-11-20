@@ -1,15 +1,10 @@
 
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/container';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
-import { green } from '@material-ui/core/colors';
-import { Divider } from '@material-ui/core';
 
 /*
 Informações de paciente:
@@ -26,17 +21,26 @@ Informações de paciente:
 • Cidade – alfanumérico(100);
 */
 
+
+
 class Cadastro extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            bairro: '',
+            cidade: '',
+            complemento: '',
+            cpf: '',
+            dataNascimento: '',
+            email: '',
+            genero: '',
+            id: '',
             cep:'',
-            logradouro:'',
-            numero:'',
-            complemento:'',
-            bairro:'',
-            localidade:''
+            logradouro: '',
+            nome: '',
+            numero: '',
+            telefone: ''
         };
     }
 
@@ -46,7 +50,11 @@ class Cadastro extends Component {
             .then(response => response.json())
             .then(data => {
                 Object.keys(data).map((key) => {
+                    if (key==="localidade"){
+                        this.setState({"cidade": data[key]});
+                    }else{
                     this.setState({[key]: data[key]});
+                }
                 })
             })
             .catch(error =>{
@@ -57,7 +65,48 @@ class Cadastro extends Component {
 
     render () {
 
-        const { logradouro, numero, complemento, bairro, localidade } = this.state;
+        const handleChange = (e) =>{
+            const {name, value} = e.target;
+            this.setState({[name]:value});
+        }
+
+        const { bairro, cidade, complemento, cpf, dataNascimento, email, genero, id, cep, logradouro, nome, numero, telefone } = this.state;
+
+          const save = () =>{
+            /** adiciona os campos a serem salvos em uma unica variavel. 
+                Note que os campos do servico e do formulario sao os mesmos entao nao é necessario repetir no formato "chave": "valor" */
+            const Params = {
+                bairro,
+                cidade,
+                complemento,
+                cpf,
+                dataNascimento,
+                email,
+                genero,
+                id,
+                logradouro,
+                nome,
+                numero,
+                telefone
+            };    
+        
+            /** adiciona o metodo e o corpo da requisicao*/
+            
+            const options = {
+                method:'POST',
+                headers: {
+                    'Accept': 'application/json, text/plain',
+                    'Content-Type': 'application/json; charset=utf-8',
+                },
+                mode: 'no-cors',
+                body: JSON.stringify(Params),
+            };
+        
+            /** realiza a requisicao */
+            fetch("https://controle-pacientes-api.herokuapp.com/pacientes", options)
+             //   .then(response => {console.log(response.json())})
+              //  .catch(error => { console.log(error) });      
+        }
 
         return (
             <Container component="main" maxWidht="xs">
@@ -68,19 +117,23 @@ class Cadastro extends Component {
                     <Grid item xs={12} sm={6}>
                         <TextField
                             required
-                            id="name"
-                            name="name"
+                            id="nome"
+                            value={nome}
+                            name="nome"
                             label="Nome"
                             fullWidth
                             autoComplete="given-name"
+                            onChange={handleChange}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField
                             required
                             id="cpf"
+                            value={cpf}
                             name="cpf"
                             label="CPF"
+                            onChange={handleChange}
                             fullWidth
                             autoComplete=""
                         />
@@ -90,17 +143,21 @@ class Cadastro extends Component {
                             required
                             type="e-mail"
                             id="email"
+                            value={email}
                             name="email"
                             label="E-mail"
+                            onChange={handleChange}
                             fullWidth
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField
                             required
-                            id="date"
-                            name="date"
+                            id="dataNascimento"
+                            value={dataNascimento}
+                            name="dataNascimento"
                             label="Data de nascimento"
+                            onChange={handleChange}
                             fullWidth
                             type="date"
                             InputLabelProps={{
@@ -112,9 +169,11 @@ class Cadastro extends Component {
                         <TextField
                             required
                             type="gener"
-                            id="gener"
-                            name="gener"
+                            id="genero"
+                            value={genero}
+                            name="genero"
                             label="Gênero"
+                            onChange={handleChange}
                             fullWidth
                             autoComplete=""
                         />
@@ -123,9 +182,11 @@ class Cadastro extends Component {
                         <TextField
                             required
                             type="telephone"
-                            id="telephone"
-                            name="telephone"
+                            id="telefone"
+                            value={telefone}
+                            name="telefone"
                             label="Telefone"
+                            onChange={handleChange}
                             fullWidth
                             autoComplete=""
                         />
@@ -139,6 +200,7 @@ class Cadastro extends Component {
                                 <TextField
                                     required
                                     id="cep"
+                                    value={cep}
                                     name="cep"
                                     label="CEP"
                                     fullWidth
@@ -150,9 +212,10 @@ class Cadastro extends Component {
                                 <TextField
                                     required
                                     disabled="true"
-                                    id="address1"
-                                    name="address1"
+                                    id="logradouro"
+                                    name="logradouro"
                                     label="Endereço"
+                                    onChange={handleChange}
                                     fullWidth
                                     autoComplete=""
                                     value={logradouro}
@@ -162,8 +225,10 @@ class Cadastro extends Component {
                                 <TextField
                                     required
                                     type=""
-                                    id="number"
-                                    name="number"
+                                    id="numero"
+                                    value={numero}
+                                    name="numero"
+                                    onChange={handleChange}
                                     label="Número"
                                     fullWidth
                                     autoComplete=""
@@ -173,9 +238,11 @@ class Cadastro extends Component {
                                 <TextField
                                     required
                                     type="complement"
-                                    id="complement"
-                                    name="complement"
+                                    id="complemento"
+                                    value={complemento}
+                                    name="complemento"
                                     label="Complemento"
+                                    onChange={handleChange}
                                     fullWidth
                                     autoComplete=""
                                 />
@@ -188,6 +255,7 @@ class Cadastro extends Component {
                                     id="bairro"
                                     name="bairro"
                                     label="Bairro"
+                                    onChange={handleChange}
                                     fullWidth
                                     autoComplete=""
                                     value={bairro}
@@ -197,12 +265,13 @@ class Cadastro extends Component {
                                 <TextField
                                     required
                                     disabled="true"
-                                    id="city"
-                                    name="city"
+                                    id="cidade"
+                                    name="cidade"
                                     label="Cidade"
+                                    onChange={handleChange}
                                     fullWidth
                                     autoComplete=""
-                                    value={localidade}
+                                    value={cidade}
                                 />
                             </Grid>
                             <Grid style={{textAlign:"right"}} item xs={12}>
@@ -224,6 +293,7 @@ class Cadastro extends Component {
                                     color="primary"
                                     size="large"
                                     className="mt-md-3"
+                                    onClick={save}
                                 >
                                     Salvar
                                 </Button>
